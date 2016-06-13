@@ -95,7 +95,7 @@ require(['underscore', 'backbone', 'splunkjs/mvc/searchmanager', 'splunkjs/mvc',
     });
 
     var activePlayerSearch = new SearchManager({
-        search: 'sourcetype=minecraft_log action=player_connect OR action=player_disconnect | eval player=if(player not null, player, victim) | transaction player startswith=player_connect endswith=player_disconnect maxspan=2d keeporphans=true | search NOT action=player_disconnect |rename _time as since| table player,since',
+        search: 'sourcetype=minecraft_log action=player_connect OR action=player_disconnect NOT "message=You are not whitelisted on this server!" | eval player=if(player not null, player, victim) | transaction player startswith=player_connect endswith=player_disconnect maxspan=2d keeporphans=true | search NOT action=player_disconnect |rename _time as since| table player,since | convert ctime(since)',
         name: 'active-player-search',
         earliest_time: 'rt-1d',
         latest_time: 'rt'
